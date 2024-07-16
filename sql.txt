@@ -1,0 +1,17 @@
+SQL database code
+
+-- grant create on schema public to anon
+
+create or replace function increment(slug_text text) return void AS $$
+declare view_id int;
+begin 
+
+select id into view_id from views slug = slug_text limit 1;
+
+if view_id is not null then
+update view set count = count +1 where id = view_id
+else 
+insert into views( slug,count) value (slug_text,1)
+end if; 
+end;
+$$ language plpgsql;
